@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Management Dashboard | Ecovana{% endblock %}
+
+{% block content %}
+
+<div class="management-page">
+    <aside class="management-sidebar">
+        <div class="management-logo">
+            <span>E</span>
+            <div>
+                <strong>ECOVANA</strong>
+                <small>MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="management-nav">
+            <a href="{% url 'management_dashboard' %}" class="active">Dashboard</a>
+            <a href="{% url 'management_properties' %}">Properties</a>
+            <a href="{% url 'management_reservations' %}">Reservations</a>
+            <a href="{% url 'management_guests' %}">Guests</a>
+            <a href="{% url 'management_experiences' %}">Experiences</a>
+        </nav>
+
+        <a href="{% url 'home' %}" class="view-site">View Public Site →</a>
+    </aside>
+
+    <main class="management-main">
+
+        <header class="management-header">
+            <div>
+                <span>ECOVANA MANAGEMENT</span>
+                <h1>Good morning, <i>Kareena</i></h1>
+                <p>Here's what's happening with your resort today.</p>
+            </div>
+
+            <a href="{% url 'home' %}" class="site-link">Visit Website ↗</a>
+        </header>
+
+        <section class="management-stats">
+
+            <div class="stat-card">
+                <span>PROPERTIES</span>
+                <strong>{{ total_properties }}</strong>
+                <p>Available properties</p>
+            </div>
+
+            <div class="stat-card">
+                <span>RESERVATIONS</span>
+                <strong>{{ total_bookings }}</strong>
+                <p>Total booking requests</p>
+            </div>
+
+            <div class="stat-card">
+                <span>PENDING</span>
+                <strong>{{ pending_bookings }}</strong>
+                <p>Awaiting confirmation</p>
+            </div>
+
+            <div class="stat-card">
+                <span>CONFIRMED</span>
+                <strong>{{ confirmed_bookings }}</strong>
+                <p>Confirmed stays</p>
+            </div>
+
+        </section>
+
+       <section class="management-content">
+    <div class="content-heading">
+        <div>
+            <span>RESERVATIONS</span>
+            <h2>Recent bookings</h2>
+        </div>
+        <a href="{% url 'management_reservations' %}">View all →</a>
+    </div>
+    <div class="reservation-box">
+        <div class="reservation-scroll">
+            <div class="reservation-table">
+                <div class="table-head">
+                    <span>GUEST</span>
+                    <span>PROPERTY</span>
+                    <span>CHECK-IN</span>
+                    <span>CHECK-OUT</span>
+                    <span>STATUS</span>
+                </div>
+                {% for booking in recent_bookings %}
+                <div class="table-row">
+                    <div>
+                        <strong>{{ booking.guest.name }}</strong>
+                        <small>{{ booking.guest.email }}</small>
+                    </div>
+                    <span>{{ booking.property.name }}</span>
+                    <span>{{ booking.check_in|date:"d M Y" }}</span>
+                    <span>{{ booking.check_out|date:"d M Y" }}</span>
+                    <span class="booking-status {{ booking.status|lower }}">{{ booking.status }}</span>
+                </div>
+                {% empty %}
+                <div class="empty-reservations">
+                    <strong>No reservations yet</strong>
+                    <p>New booking requests will appear here.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+        <section class="quick-actions">
+
+            <div>
+                <span>MANAGEMENT</span>
+                <h2>Quick actions</h2>
+            </div>
+
+            <div class="action-grid">
+                <a href="/admin/">
+                    <strong>Manage Properties</strong>
+                    <span>Update stays and availability →</span>
+                </a>
+
+                <a href="/admin/">
+                    <strong>Manage Reservations</strong>
+                    <span>Review booking requests →</span>
+                </a>
+
+                <a href="/admin/">
+                    <strong>Manage Experiences</strong>
+                    <span>Update resort experiences →</span>
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+{% endblock %}

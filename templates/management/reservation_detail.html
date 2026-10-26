@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reservation Details | Ecovana Management{% endblock %}
+
+{% block content %}
+
+<div class="management-page">
+
+    <aside class="management-sidebar">
+        <div class="management-logo">
+            <span>E</span>
+            <div>
+                <strong>ECOVANA</strong>
+                <small>MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="management-nav">
+            <a href="{% url 'management_dashboard' %}">Dashboard</a>
+            <a href="{% url 'management_properties' %}">Properties</a>
+            <a href="{% url 'management_reservations' %}" class="active">Reservations</a>
+            <a href="{% url 'management_guests' %}">Guests</a>
+            <a href="{% url 'management_experiences' %}">Experiences</a>
+        </nav>
+
+        <a href="{% url 'home' %}" class="view-site">← View Ecovana website</a>
+    </aside>
+
+    <main class="management-main">
+
+        <div class="reservation-details-page">
+
+            <section class="details-header">
+
+                <div>
+                    <span class="details-header-label">RESERVATION DETAILS</span>
+
+                    <h1>
+                        Guest <i>reservation.</i>
+                    </h1>
+
+                    <p>
+                        Review the complete booking information before managing this reservation.
+                    </p>
+                </div>
+
+                <a href="{% url 'management_reservations' %}" class="details-back-btn">
+                    ← Back to reservations
+                </a>
+
+            </section>
+
+            <div class="details-layout">
+
+                <div>
+
+                    <section class="details-card">
+
+                        <div class="details-card-title">
+                            <span>GUEST INFORMATION</span>
+                            <h2>Your guest</h2>
+                        </div>
+
+                        <div class="details-guest">
+
+                            <div class="details-guest-avatar">
+                                {{ booking.guest.name|first|upper }}
+                            </div>
+
+                            <div class="details-guest-info">
+                                <h3>{{ booking.guest.name }}</h3>
+                                <p>{{ booking.guest.email }}</p>
+                            </div>
+
+                        </div>
+
+                        <div class="details-info-grid">
+
+                            <div class="details-info-item">
+                                <span>Phone</span>
+                                <strong>{{ booking.guest.phone }}</strong>
+                            </div>
+
+                            <div class="details-info-item">
+                                <span>Age</span>
+                                <strong>{{ booking.guest.age }} years</strong>
+                            </div>
+
+                            <div class="details-info-item">
+                                <span>Guest Type</span>
+                                <strong>{{ booking.guest.guest_type|title }}</strong>
+                            </div>
+
+                            <div class="details-info-item">
+                                <span>Total Guests</span>
+                                <strong>{{ booking.guests }}</strong>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <section class="details-card" style="margin-top:25px;">
+
+                        <div class="details-card-title">
+                            <span>STAY INFORMATION</span>
+                            <h2>Property & dates</h2>
+                        </div>
+
+                        <div class="details-property">
+
+                            <div class="details-property-image">
+
+                                {% if booking.property.image %}
+                                    <img src="{{ booking.property.image.url }}" alt="{{ booking.property.name }}">
+                                {% endif %}
+
+                            </div>
+
+                            <div class="details-property-info">
+
+                                <span>PROPERTY</span>
+
+                                <h3>{{ booking.property.name }}</h3>
+
+                                <p>⌖ {{ booking.property.location }}</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="details-booking-grid">
+
+                            <div class="details-date-box">
+                                <span>CHECK-IN</span>
+                                <strong>{{ booking.check_in|date:"d F Y" }}</strong>
+                            </div>
+
+                            <div class="details-date-box">
+                                <span>CHECK-OUT</span>
+                                <strong>{{ booking.check_out|date:"d F Y" }}</strong>
+                            </div>
+
+                            <div class="details-date-box">
+                                <span>GUESTS</span>
+                                <strong>{{ booking.guests }} Guests</strong>
+                            </div>
+
+                            <div class="details-date-box">
+                                <span>BOOKING ID</span>
+                                <strong>#{{ booking.id }}</strong>
+                            </div>
+
+                        </div>
+
+                        <div class="details-request">
+
+                            <span>SPECIAL REQUEST</span>
+
+                            {% if booking.special_request %}
+                                <p>{{ booking.special_request }}</p>
+                            {% else %}
+                                <p>No special request was provided.</p>
+                            {% endif %}
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <div>
+
+                    <section class="details-card details-status-card">
+
+                        <div class="details-card-title">
+                            <span>BOOKING STATUS</span>
+                            <h2>Reservation</h2>
+                        </div>
+
+                        {% if booking.status == 'Pending' %}
+
+                            <div class="details-status pending">
+                                Pending
+                            </div>
+
+                        {% elif booking.status == 'Confirmed' %}
+
+                            <div class="details-status confirmed">
+                                Confirmed
+                            </div>
+
+                        {% else %}
+
+                            <div class="details-status rejected">
+                                Rejected
+                            </div>
+
+                        {% endif %}
+
+                        <div class="details-price">
+
+                            <span>NIGHTLY RATE</span>
+
+                            <strong>₹{{ booking.property.price }}</strong>
+
+                            <small>/ night</small>
+
+                        </div>
+
+                        <div class="details-actions">
+
+                            {% if booking.status != 'Confirmed' %}
+
+                                <form method="POST" action="{% url 'confirm_booking' booking.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="details-action-btn confirm">
+                                        ✓ Confirm Reservation
+                                    </button>
+                                </form>
+
+                            {% endif %}
+
+                            {% if booking.status != 'Rejected' %}
+
+                                <form method="POST" action="{% url 'reject_booking' booking.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="details-action-btn reject">
+                                        × Reject Reservation
+                                    </button>
+                                </form>
+
+                            {% endif %}
+
+                            <a href="{% url 'management_reservations' %}" class="details-action-btn">
+                                ← Back to Reservations
+                            </a>
+
+                        </div>
+
+                        <div class="details-created">
+                            Reservation created
+                            {{ booking.created_at|date:"d F Y, h:i A" }}
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

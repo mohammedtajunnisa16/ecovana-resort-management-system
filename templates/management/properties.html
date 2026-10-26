@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Properties | Ecovana Management{% endblock %}
+
+{% block content %}
+
+<div class="management-page">
+
+    <aside class="management-sidebar">
+        <div class="management-logo">
+            <span>E</span>
+            <div>
+                <strong>ECOVANA</strong>
+                <small>MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="management-nav">
+            <a href="{% url 'management_dashboard' %}">Dashboard</a>
+            <a href="{% url 'management_properties' %}" class="active">Properties</a>
+            <a href="{% url 'management_reservations' %}">Reservations</a>
+            <a href="{% url 'management_guests' %}">Guests</a>
+            <a href="{% url 'management_experiences' %}">Experiences</a>
+        </nav>
+
+        <a href="{% url 'home' %}" class="view-site">← View Ecovana website</a>
+    </aside>
+
+    <main class="management-main">
+
+        <section class="properties-header">
+            <div>
+                <span>ECOVANA MANAGEMENT</span>
+                <h1>Your <i>properties.</i></h1>
+                <p>Manage your resort houses, villas and cabins from one place.</p>
+            </div>
+
+            <a href="{% url 'add_property' %}" class="add-property-btn">
+                <span>+</span>
+                Add Property
+            </a>
+        </section>
+
+        <div class="property-top">
+            <div>
+                <span>YOUR COLLECTION</span>
+                <h2>All properties</h2>
+            </div>
+
+            <div class="property-count">
+                <strong>{{ properties|length }}</strong>
+                <span>Properties</span>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="management-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="property-management-grid">
+
+            {% for property in properties %}
+
+                <article class="management-property-card">
+
+                    <div class="management-property-image">
+                        {% if property.image %}
+                            <img src="{{ property.image.url }}" alt="{{ property.name }}">
+                        {% else %}
+                            <div class="no-property-image">
+                                <span>ECOVANA</span>
+                                <small>No image uploaded</small>
+                            </div>
+                        {% endif %}
+
+                        {% if property.is_available %}
+                            <div class="property-status available">
+                                <span></span>
+                                Available
+                            </div>
+                        {% else %}
+                            <div class="property-status unavailable">
+                                <span></span>
+                                Unavailable
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="management-property-content">
+                        <div class="property-label">PROPERTY</div>
+
+                        <h3>{{ property.name }}</h3>
+
+                        <div class="property-location">
+                            <span>⌖</span>
+                            {{ property.location }}
+                        </div>
+
+                        <p>{{ property.description }}</p>
+
+                        <div class="property-features">
+                            <div>
+                                <strong>{{ property.capacity }}</strong>
+                                <small>Guests</small>
+                            </div>
+
+                            <div>
+                                <strong>{{ property.bedrooms }}</strong>
+                                <small>Bedrooms</small>
+                            </div>
+
+                            <div>
+                                <strong>{{ property.bathrooms }}</strong>
+                                <small>Bathrooms</small>
+                            </div>
+                        </div>
+
+                        <div class="property-card-bottom">
+                            <div class="property-price">
+                                <small>FROM</small>
+                                <strong>₹{{ property.price }}</strong>
+                                <span>/ night</span>
+                            </div>
+
+                            <a href="{% url 'edit_property' property.id %}" class="property-edit">Manage →</a>
+                        </div>
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="properties-empty">
+                    <div class="empty-icon">+</div>
+                    <h3>No properties yet</h3>
+                    <p>Your Ecovana properties will appear here once you add your first stay.</p>
+                    <a href="{% url 'add_property' %}">+ Add your first property</a>
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

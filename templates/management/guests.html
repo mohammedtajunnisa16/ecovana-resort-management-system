@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Guests | Ecovana Management{% endblock %}
+{% block content %}
+<div class="management-page">
+<aside class="management-sidebar">
+<div class="management-logo">
+<span>E</span>
+<div>
+<strong>ECOVANA</strong>
+<small>MANAGEMENT</small>
+</div>
+</div>
+<nav class="management-nav">
+<a href="{% url 'management_dashboard' %}">Dashboard</a>
+<a href="{% url 'management_properties' %}">Properties</a>
+<a href="{% url 'management_reservations' %}">Reservations</a>
+<a href="{% url 'management_guests' %}" class="active">Guests</a>
+<a href="{% url 'management_experiences' %}">Experiences</a>
+</nav>
+<a href="{% url 'home' %}" class="view-site">View Public Site →</a>
+</aside>
+<main class="management-main">
+<section class="guests-header">
+<div>
+<span>ECOVANA MANAGEMENT</span>
+<h1>Your <i>guests.</i></h1>
+<p>View and manage everyone who has made a reservation at Ecovana.</p>
+</div>
+<a href="{% url 'management_reservations' %}" class="guest-action">View Reservations →</a>
+</section>
+<section class="guest-stats">
+<div class="guest-stat-card">
+<span>TOTAL GUESTS</span>
+<strong>{{ total_guests }}</strong>
+<p>Registered guests</p>
+</div>
+<div class="guest-stat-card">
+<span>INDIVIDUAL</span>
+<strong>{{ individual_guests }}</strong>
+<p>Individual guests</p>
+</div>
+<div class="guest-stat-card">
+<span>GROUP / FAMILY</span>
+<strong>{{ group_guests }}</strong>
+<p>Group reservations</p>
+</div>
+</section>
+<section class="guest-section">
+<div class="guest-section-heading">
+<div>
+<span>GUEST DIRECTORY</span>
+<h2>All guests</h2>
+</div>
+<div class="guest-count">
+<strong>{{ total_guests }}</strong>
+<span>Guests</span>
+</div>
+</div>
+<div class="guest-table-box">
+<div class="guest-table-scroll">
+<div class="guest-table">
+<div class="guest-table-head">
+<span>GUEST</span>
+<span>AGE</span>
+<span>CONTACT</span>
+<span>TYPE</span>
+<span>BOOKINGS</span>
+</div>
+{% for guest in guests %}
+<div class="guest-table-row">
+<div class="guest-profile">
+<div class="guest-avatar">{{ guest.name|first|upper }}</div>
+<div>
+<strong>{{ guest.name }}</strong>
+<small>{{ guest.email }}</small>
+</div>
+</div>
+<span class="guest-age">{{ guest.age }} years</span>
+<div class="guest-contact">
+<strong>{{ guest.phone }}</strong>
+<small>{{ guest.email }}</small>
+</div>
+<span class="guest-type">{{ guest.guest_type|title }}</span>
+<span class="guest-bookings">{{ guest.booking_count }}</span>
+</div>
+{% empty %}
+<div class="guests-empty">
+<div class="guest-empty-icon">+</div>
+<h3>No guests yet</h3>
+<p>Guests will appear here after their first reservation.</p>
+<a href="{% url 'management_reservations' %}">View Reservations →</a>
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+{% endblock %}

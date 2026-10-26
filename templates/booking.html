@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% block title %}Book Your Stay | Ecovana{% endblock %}
+
+{% block content %}
+
+<header class="navbar booking-nav">
+    <a href="/" class="logo">
+        <span class="logo-icon">E</span>
+        <span><b>ECOVANA</b><small>NATURE RESORTS</small></span>
+    </a>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/stays/">Stays</a>
+        <a href="/experiences/">Experiences</a>
+        <a href="/about/">About</a>
+    </nav>
+
+    <a href="/booking/" class="book-btn">Check Availability</a>
+</header>
+
+<section class="booking-hero">
+    <div class="booking-hero-content">
+        <span>ECOVANA RESERVATIONS</span>
+        <h1>Your escape<br>starts <i>here.</i></h1>
+        <p>Choose your stay, tell us about your visit and let Ecovana take care of the rest.</p>
+    </div>
+</section>
+
+<section class="booking-area">
+
+    <div class="booking-heading">
+        <span>PLAN YOUR STAY</span>
+        <h2>Find your<br><i>perfect escape.</i></h2>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="booking-form">
+        {% csrf_token %}
+        {% if messages %}
+    <div class="booking-messages">
+        {% for message in messages %}
+            <div class="booking-message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+        <div class="form-section">
+            <div class="section-number">01</div>
+            <div class="section-content">
+                <h3>Guest details</h3>
+                <p>Tell us who will be staying with us.</p>
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="Your full name" required>
+                        <small class="error-text"></small>
+                    </div>
+
+                    <div class="field">
+                        <label>Age</label>
+                        <input type="number" name="age" min="1" max="100" placeholder="Your age" required>
+                        <small class="error-text"></small>
+                    </div>
+
+                    <div class="field">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" maxlength="10" placeholder="10-digit number" required>
+                        <small class="error-text"></small>
+                    </div>
+
+                    <div class="field">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                        <small class="error-text"></small>
+                    </div>
+                </div>
+
+                <div class="gender-box">
+                    <label>Guest Type</label>
+                    <div class="radio-row">
+                        <label><input type="radio" name="guest_type" value="Individual" required> Individual</label>
+                        <label><input type="radio" name="guest_type" value="Couple"> Couple</label>
+                        <label><input type="radio" name="guest_type" value="Family"> Family</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-number">02</div>
+            <div class="section-content">
+                <h3>Choose your stay</h3>
+                <p>Select one property for your visit.</p>
+
+                <div class="stay-options">
+
+    {% for property in properties %}
+
+    <label class="stay-option">
+        <input type="radio" name="property" value="{{ property.id }}" required>
+
+        {% if property.image %}
+        <span class="stay-option-image" style="background-image:url('{{ property.image.url }}');"></span>
+        {% else %}
+        <span class="stay-option-image"></span>
+        {% endif %}
+
+        <span class="stay-option-info">
+            <strong>{{ property.name }}</strong>
+            <small>{{ property.capacity }} Guests · {{ property.bedrooms }} Bedrooms · {{ property.bathrooms }} Bathrooms</small>
+            <b>₹{{ property.price }} <em>/ night</em></b>
+        </span>
+
+        <span class="select-mark">+</span>
+    </label>
+
+    {% empty %}
+
+    <p>No stays are currently available.</p>
+
+    {% endfor %}
+
+</div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-number">03</div>
+            <div class="section-content">
+                <h3>Your dates</h3>
+                <p>When would you like to stay?</p>
+
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Check-in</label>
+                        <input type="date" name="check_in" required>
+                        <small class="error-text"></small>
+                    </div>
+
+                    <div class="field">
+                        <label>Check-out</label>
+                        <input type="date" name="check_out" required>
+                        <small class="error-text"></small>
+                    </div>
+
+                    <div class="field">
+                        <label>Adults</label>
+                        <select name="adults" required>
+                            <option value="">Select</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Children</label>
+                        <select name="children">
+                            <option value="0">0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+    <div class="section-number">04</div>
+    <div class="section-content">
+        <h3>Identity verification</h3>
+        <p>Provide one government-issued identity document for a smooth and secure check-in.</p>
+
+      <div class="identity-type">
+    <label for="identity_type">Identity Document</label>
+    <select id="identity_type" name="identity_type" required>
+        <option value="">Select identity document</option>
+        <option value="Aadhaar">Aadhaar Card</option>
+        <option value="PAN">PAN Card</option>
+        <option value="Driving Licence">Driving Licence</option>
+        <option value="Voter ID">Voter ID</option>
+        <option value="Passport">Passport</option>
+    </select>
+</div>
+
+<div class="identity-upload">
+    <label for="identity_document">
+        <span class="identity-upload-icon">↑</span>
+        <strong>Upload identity document</strong>
+        <small>JPG, JPEG, PNG or PDF · Maximum 5MB</small>
+    </label>
+    <input type="file" id="identity_document" name="guest_image" accept=".jpg,.jpeg,.png,.pdf">
+</div>
+
+        <div class="identity-preview" id="identityPreview"></div>
+
+        <div class="identity-consent">
+            <label>
+                <input type="checkbox" name="identity_consent">
+                <span>I agree to provide this document for reservation verification.</span>
+            </label>
+        </div>
+
+        <div class="identity-security">
+            <span>🔒</span>
+            <p>Your document is used only for reservation verification and secure check-in.</p>
+        </div>
+    </div>
+</div>
+
+        <div class="booking-submit">
+            <div>
+                <span>READY TO ESCAPE?</span>
+                <p>Your reservation will be confirmed after availability is checked.</p>
+            </div>
+
+          
+            <button type="submit">
+                Request Reservation
+                <span>→</span>
+            </button>
+          
+        </div>
+
+    </form>
+
+</section>
+
+<section class="booking-note">
+    <div>
+        <span>ECOVANA PROMISE</span>
+        <h2>Simple booking.<br><i>Beautiful stays.</i></h2>
+    </div>
+    <p>We'll keep your details secure and use them only to process your reservation.</p>
+</section>
+
+<footer>
+    <div>
+        <b>ECOVANA</b></div>
+        <div>
+<p>Nature resorts, beautifully lived.</p>
+    </div>
+
+
+
+</footer>
+<script>
+const identityInput=document.getElementById("identity_document");
+const identityPreview=document.getElementById("identityPreview");
+
+identityInput.addEventListener("change",function(){
+    const file=this.files[0];
+    if(!file)return;
+
+    if(file.size>5*1024*1024){
+        alert("Document size must be below 5MB.");
+        this.value="";
+        return;
+    }
+
+    identityPreview.innerHTML=`
+        <div class="identity-preview-icon">✓</div>
+        <div class="identity-preview-info">
+            <strong>${file.name}</strong>
+            <small>Identity document ready for verification</small>
+        </div>
+    `;
+
+    identityPreview.classList.add("show");
+});
+</script>
+
+{% endblock %}

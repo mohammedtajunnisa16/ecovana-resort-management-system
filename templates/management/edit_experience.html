@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit Experience | Ecovana Management{% endblock %}
+{% block content %}
+<div class="management-page">
+<aside class="management-sidebar">
+<div class="management-logo">
+<span>E</span>
+<div>
+<strong>ECOVANA</strong>
+<small>MANAGEMENT</small>
+</div>
+</div>
+<nav class="management-nav">
+<a href="{% url 'management_dashboard' %}">Dashboard</a>
+<a href="{% url 'management_properties' %}">Properties</a>
+<a href="{% url 'management_reservations' %}">Reservations</a>
+<a href="#">Guests</a>
+<a href="{% url 'management_experiences' %}" class="active">Experiences</a>
+</nav>
+<a href="{% url 'home' %}" class="view-site">View Public Site →</a>
+</aside>
+<main class="management-main">
+<section class="experience-detail-header">
+<div>
+<span>ECOVANA MANAGEMENT</span>
+<h1>Edit <i>{{ experience.name }}.</i></h1>
+<p>Update this experience and keep your Ecovana collection fresh.</p>
+</div>
+<a href="{% url 'management_experiences' %}" class="back-experience">← Back</a>
+</section>
+<section class="experience-edit-box">
+<div class="experience-current-image">
+{% if experience.image %}
+{% load static %}
+<img src="{% static experience.image %}" alt="{{ experience.name }}">
+{% else %}
+<div class="experience-no-image">No image</div>
+{% endif %}
+</div>
+<form method="POST" enctype="multipart/form-data" class="experience-edit-form">
+{% csrf_token %}
+<div class="experience-field">
+<label>CHANGE IMAGE</label>
+<input type="file" name="image">
+</div>
+<div class="experience-field">
+<label>EXPERIENCE TITLE</label>
+<input type="text" name="name" value="{{ experience.name }}" required>
+</div>
+<div class="experience-field">
+<label>DESCRIPTION</label>
+<textarea name="description" rows="6" required>{{ experience.description }}</textarea>
+</div>
+<div class="experience-field">
+<label>PRICE PER EXPERIENCE</label>
+<div class="experience-price-input">
+<span>₹</span>
+<input type="number" name="price" value="{{ experience.price }}" required>
+</div>
+</div>
+<div class="experience-availability">
+<div>
+<strong>Experience availability</strong>
+<p>Allow guests to book this experience.</p>
+</div>
+<label class="experience-toggle">
+<input type="checkbox" name="is_available" {% if experience.is_available %}checked{% endif %}>
+<span></span>
+</label>
+</div>
+<div class="experience-form-actions">
+<a href="{% url 'management_experiences' %}">Cancel</a>
+<button type="submit">Save Changes →</button>
+</div>
+</form>
+</section>
+</main>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Manager Login | Ecovana{% endblock %}
+{% block content %}
+<div class="ecovana-login-page">
+<div class="ecovana-login-box">
+<div class="ecovana-login-logo">E</div>
+<span class="ecovana-login-label">ECOVANA MANAGEMENT</span>
+<h1>Welcome back.</h1>
+<p>Sign in to access the Ecovana management dashboard.</p>
+<form method="post">
+{% csrf_token %}
+<div class="ecovana-login-field">
+<label>Username</label>
+<input type="text" name="username" required>
+</div>
+<div class="ecovana-login-field">
+<label>Password</label>
+<input type="password" name="password" required>
+</div>
+{% if form.errors %}
+<div class="ecovana-login-error">Invalid username or password.</div>
+{% endif %}
+<button type="submit">Sign In <span>→</span></button>
+</form>
+<a href="{% url 'home' %}" class="ecovana-login-back">← Back to Ecovana</a>
+</div>
+</div>
+{% endblock %}

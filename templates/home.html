@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %}Home | Ecovana{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <a href="/" class="logo">
+        <span class="logo-icon">E</span>
+        <span><b>ECOVANA</b><small>NATURE RESORTS</small></span>
+    </a>
+
+    <nav>
+        <a href="/" class="active">Home</a>
+        <a href="/stays/">Stays</a>
+        <a href="/experiences/">Experiences</a>
+        <a href="/about/">About</a>
+    </nav>
+
+    <a href="/booking/" class="book-btn">Check Availability</a>
+</header>
+
+<section class="home-hero">
+    <div class="home-hero-content">
+        <span>ECOVANA · NATURE RESORTS</span>
+        <h1>Stay somewhere<br><i>beautiful.</i></h1>
+        <p>Comfortable rooms, thoughtful spaces and memorable moments in one unforgettable resort.</p>
+        <div class="home-actions">
+            <a href="/stays/" class="primary-link">Explore stays →</a>
+            <a href="/about/" class="secondary-link">Discover Ecovana</a>
+        </div>
+    </div>
+
+    
+</section>
+
+<section class="home-welcome">
+
+    <div class="welcome-image"></div>
+
+    <div class="welcome-content">
+        <span>THE ECOVANA EXPERIENCE</span>
+        <h2>A resort built<br>around <i>comfort.</i></h2>
+        <p>
+            From peaceful rooms and private villas to dining,
+            wellness and recreation, every part of Ecovana is
+            designed to make your stay effortless.
+        </p>
+
+        <div class="welcome-stats">
+            <div>
+                <strong>03</strong>
+                <small>Stay Types</small>
+            </div>
+            <div>
+                <strong>06+</strong>
+                <small>Facilities</small>
+            </div>
+            <div>
+                <strong>24/7</strong>
+                <small>Guest Support</small>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="home-stays">
+
+    <div class="home-stays-heading">
+        <span>STAY YOUR WAY</span>
+        <h2>Rooms made for<br><i>slow mornings.</i></h2>
+        <a href="/stays/">View all stays →</a>
+    </div>
+
+    <div class="home-room-grid">
+
+        <article class="home-room room-one">
+            <div>
+                <span>FOREST HOUSE</span>
+                <h3>Willow House</h3>
+                <strong>₹12,500 <small>/ night</small></strong>
+            </div>
+        </article>
+
+        <article class="home-room room-two">
+            <div>
+                <span>PRIVATE VILLA</span>
+                <h3>Fern Valley</h3>
+                <strong>₹18,500 <small>/ night</small></strong>
+            </div>
+        </article>
+
+    </div>
+
+</section>
+
+<section class="home-facilities">
+
+    <div class="facility-image"></div>
+
+    <div class="facility-content">
+        <span>MORE THAN A ROOM</span>
+        <h2>Everything you need<br><i>under one roof.</i></h2>
+
+        <div class="facility-links">
+            <span>Swimming Pool</span>
+            <span>Restaurant</span>
+            <span>Fitness Studio</span>
+            <span>Spa & Wellness</span>
+        </div>
+
+        <a href="/experiences/">Explore experiences →</a>
+    </div>
+
+</section>
+
+<section class="home-booking">
+    <span>YOUR ECOVANA ESCAPE</span>
+    <h2>Ready to<br><i>stay awhile?</i></h2>
+    <a href="/booking/">Check availability →</a>
+</section>
+
+<footer>
+    <div>
+        <b>ECOVANA</b></div>
+        <div>
+<p>Nature resorts, beautifully lived.</p>
+    </div>
+
+
+
+</footer>
+
+{% endblock %}

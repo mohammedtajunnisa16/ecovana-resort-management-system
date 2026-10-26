@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reservation Confirmed | Ecovana{% endblock %}
+
+{% block content %}
+
+<section class="reservation-success">
+    <div class="success-overlay"></div>
+
+    <div class="success-card">
+        <div class="success-header">
+            <div class="success-check">✓</div>
+            <span>ECOVANA RESORT</span>
+            <h1>Your stay is<br><i>almost ready.</i></h1>
+            <p>Your reservation request has been received. We will confirm your stay shortly.</p>
+        </div>
+
+        <div class="reservation-ref">
+            <div>
+                <small>RESERVATION ID</small>
+                <strong>#{{ booking.id }}</strong>
+            </div>
+            <div class="pending">{{ booking.status|upper }}</div>
+        </div>
+
+        <div class="booking-details">
+            <div>
+                <small>GUEST</small>
+                <strong>{{ booking.guest.name }}</strong>
+            </div>
+
+            <div>
+                <small>STAY</small>
+                <strong>{{ booking.property.name }}</strong>
+            </div>
+
+            <div>
+                <small>CHECK-IN</small>
+                <strong>{{ booking.check_in|date:"d M Y" }}</strong>
+            </div>
+
+            <div>
+                <small>CHECK-OUT</small>
+                <strong>{{ booking.check_out|date:"d M Y" }}</strong>
+            </div>
+
+            <div>
+                <small>GUESTS</small>
+                <strong>{{ booking.guests }}</strong>
+            </div>
+
+            <div>
+                <small>EMAIL</small>
+                <strong>{{ booking.guest.email }}</strong>
+            </div>
+
+            <div>
+                <small>PHONE</small>
+                <strong>{{ booking.guest.phone }}</strong>
+            </div>
+
+            <div>
+                <small>RESERVATION STATUS</small>
+                <strong class="status">{{ booking.status }}</strong>
+            </div>
+        </div>
+
+        {% if booking.special_request %}
+        <div class="guest-note">
+            <small>SPECIAL REQUEST</small>
+            <p>{{ booking.special_request }}</p>
+        </div>
+        {% endif %}
+
+        <div class="success-footer">
+            <p>Thank you for choosing Ecovana.</p>
+            <a href="{% url 'home' %}">Return to Ecovana <b>→</b></a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

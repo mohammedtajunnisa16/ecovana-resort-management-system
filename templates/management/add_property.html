@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Property | Ecovana Management{% endblock %}
+
+{% block content %}
+
+<div class="management-page">
+    <aside class="management-sidebar">
+        <div class="management-logo">
+            <span>E</span>
+            <div>
+                <strong>ECOVANA</strong>
+                <small>MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="management-nav">
+            <a href="{% url 'management_dashboard' %}">Dashboard</a>
+            <a href="{% url 'management_properties' %}" class="active">Properties</a>
+            <a href="{% url 'management_reservations' %}">Reservations</a>
+            <a href="{% url 'management_guests' %}">Guests</a>
+            <a href="{% url 'management_experiences' %}">Experiences</a>
+        </nav>
+
+        <a href="{% url 'home' %}" class="view-site">← View Ecovana website</a>
+    </aside>
+
+    <main class="management-main add-property-main">
+
+        <div class="add-property-top">
+            <a href="{% url 'management_properties' %}" class="back-link">← Back to properties</a>
+            <span>PROPERTY MANAGEMENT</span>
+            <h1>Add a new <i>stay.</i></h1>
+            <p>Create a beautiful property listing that will appear across Ecovana.</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="management-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="property-form">
+            {% csrf_token %}
+
+            <div class="form-card">
+                <div class="form-card-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Property details</h2>
+                        <p>Tell guests about this beautiful stay.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-field full">
+                        <label for="name">Property Name</label>
+                        <input type="text" id="name" name="name" placeholder="Example: Willow House" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" placeholder="Example: Munnar, Kerala" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="price">Price per Night</label>
+                        <div class="input-prefix">
+                            <span>₹</span>
+                            <input type="number" id="price" name="price" min="1" step="0.01" placeholder="12500" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field full">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="5" placeholder="Describe the property, interiors, views and what makes this stay special..." required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="form-card-heading">
+                    <span>02</span>
+                    <div>
+                        <h2>Stay capacity</h2>
+                        <p>Set the accommodation details.</p>
+                    </div>
+                </div>
+
+                <div class="capacity-grid">
+                    <div class="number-field">
+                        <label for="capacity">Guests</label>
+                        <div class="number-control">
+                            <span>👥</span>
+                            <input type="number" id="capacity" name="capacity" min="1" max="50" value="2" required>
+                        </div>
+                    </div>
+
+                    <div class="number-field">
+                        <label for="bedrooms">Bedrooms</label>
+                        <div class="number-control">
+                            <span>🛏</span>
+                            <input type="number" id="bedrooms" name="bedrooms" min="1" max="20" value="1" required>
+                        </div>
+                    </div>
+
+                    <div class="number-field">
+                        <label for="bathrooms">Bathrooms</label>
+                        <div class="number-control">
+                            <span>🚿</span>
+                            <input type="number" id="bathrooms" name="bathrooms" min="1" max="20" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card image-card">
+                <div class="form-card-heading">
+                    <span>03</span>
+                    <div>
+                        <h2>Property image</h2>
+                        <p>Choose a high-quality image for the listing.</p>
+                    </div>
+                </div>
+
+                <label for="image" class="image-upload">
+                    <div class="upload-icon">↑</div>
+                    <strong>Upload property image</strong>
+                    <span>JPG, JPEG or PNG · Recommended landscape image</span>
+                    <b>Choose image</b>
+                </label>
+
+                <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png" hidden>
+
+                <div class="image-preview" id="imagePreview">
+                    <img id="previewImage" src="" alt="Property preview">
+                    <div>
+                        <strong id="fileName"></strong>
+                        <small>Ready to upload</small>
+                    </div>
+                    <button type="button" id="removeImage">×</button>
+                </div>
+            </div>
+
+            <div class="form-card availability-card">
+                <div>
+                    <span class="small-label">VISIBILITY</span>
+                    <h2>Make this property available</h2>
+                    <p>Available properties will appear on the public Ecovana Stays page.</p>
+                </div>
+
+                <label class="toggle">
+                    <input type="checkbox" name="is_available" checked>
+                    <span></span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'management_properties' %}" class="cancel-btn">Cancel</a>
+                <button type="submit" class="save-property-btn">
+                    Save Property
+                    <span>→</span>
+                </button>
+            </div>
+        </form>
+
+    </main>
+</div>
+
+<script>
+const imageInput = document.getElementById("image");
+const imagePreview = document.getElementById("imagePreview");
+const previewImage = document.getElementById("previewImage");
+const fileName = document.getElementById("fileName");
+const removeImage = document.getElementById("removeImage");
+
+imageInput.addEventListener("change", function () {
+    const file = this.files[0];
+
+    if (!file) return;
+
+    if (!file.type.match("image.*")) {
+        alert("Please select a JPG, JPEG or PNG image.");
+        this.value = "";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Image size must be below 5MB.");
+        this.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        previewImage.src = e.target.result;
+        fileName.textContent = file.name;
+        imagePreview.classList.add("show");
+    };
+
+    reader.readAsDataURL(file);
+});
+
+removeImage.addEventListener("click", function () {
+    imageInput.value = "";
+    previewImage.src = "";
+    fileName.textContent = "";
+    imagePreview.classList.remove("show");
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Property | Ecovana Management{% endblock %}
+
+{% block content %}
+
+<div class="management-page">
+    <aside class="management-sidebar">
+        <div class="management-logo">
+            <span>E</span>
+            <div>
+                <strong>ECOVANA</strong>
+                <small>MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="management-nav">
+            <a href="{% url 'management_dashboard' %}">Dashboard</a>
+            <a href="{% url 'management_properties' %}" class="active">Properties</a>
+            <a href="{% url 'management_reservations' %}">Reservations</a>
+            <a href="{% url 'management_guests' %}">Guests</a>
+            <a href="{% url 'management_experiences' %}">Experiences</a>
+        </nav>
+
+        <a href="{% url 'home' %}" class="view-site">← View Ecovana website</a>
+    </aside>
+
+    <main class="management-main edit-property-main">
+
+        <div class="edit-property-top">
+            <a href="{% url 'management_properties' %}" class="back-link">← Back to properties</a>
+            <span>PROPERTY MANAGEMENT</span>
+            <h1>Edit <i>{{ property.name }}</i></h1>
+            <p>Update the details of your Ecovana property.</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="management-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="edit-property-form">
+            {% csrf_token %}
+
+            <div class="edit-card">
+                <div class="edit-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Property details</h2>
+                        <p>Update the basic information.</p>
+                    </div>
+                </div>
+
+                <div class="edit-grid">
+
+                    <div class="edit-field">
+                        <label>Property Name</label>
+                        <input type="text" name="name" value="{{ property.name }}" required>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Location</label>
+                        <input type="text" name="location" value="{{ property.location }}" required>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Price per Night</label>
+                        <div class="edit-prefix">
+                            <span>₹</span>
+                            <input type="number" name="price" value="{{ property.price }}" min="1" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Guest Capacity</label>
+                        <input type="number" name="capacity" value="{{ property.capacity }}" min="1" required>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Bedrooms</label>
+                        <input type="number" name="bedrooms" value="{{ property.bedrooms }}" min="1" required>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Bathrooms</label>
+                        <input type="number" name="bathrooms" value="{{ property.bathrooms }}" min="1" required>
+                    </div>
+
+                    <div class="edit-field full">
+                        <label>Description</label>
+                        <textarea name="description" rows="6" required>{{ property.description }}</textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="edit-card">
+                <div class="edit-heading">
+                    <span>02</span>
+                    <div>
+                        <h2>Property image</h2>
+                        <p>Replace the current property image.</p>
+                    </div>
+                </div>
+
+                {% if property.image %}
+                    <div class="current-image">
+                        <img src="{{ property.image.url }}" alt="{{ property.name }}">
+                        <div>
+                            <small>CURRENT IMAGE</small>
+                            <strong>{{ property.name }}</strong>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <label for="property-image" class="edit-upload">
+                    <div>↑</div>
+                    <strong>Choose a new image</strong>
+                    <span>JPG, JPEG or PNG · Maximum 5MB</span>
+                </label>
+
+                <input type="file" id="property-image" name="image" accept=".jpg,.jpeg,.png">
+
+                <div class="new-image-preview" id="newImagePreview">
+                    <img id="newPreviewImage" src="" alt="New property preview">
+                    <span id="newFileName"></span>
+                </div>
+            </div>
+
+            <div class="edit-card availability-edit">
+                <div>
+                    <small>VISIBILITY</small>
+                    <h2>Property availability</h2>
+                    <p>Control whether guests can see and book this property.</p>
+                </div>
+
+                <label class="edit-toggle">
+                    <input type="checkbox" name="is_available" {% if property.is_available %}checked{% endif %}>
+                    <span></span>
+                </label>
+            </div>
+
+            <div class="edit-actions">
+                <a href="{% url 'management_properties' %}" class="edit-cancel">Cancel</a>
+                <button type="submit" class="update-property">
+                    Save Changes
+                    <span>→</span>
+                </button>
+            </div>
+
+        </form>
+
+    </main>
+</div>
+
+<script>
+const imageInput = document.getElementById("property-image");
+const preview = document.getElementById("newImagePreview");
+const previewImage = document.getElementById("newPreviewImage");
+const fileName = document.getElementById("newFileName");
+
+imageInput.addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (!file) return;
+
+    if (!file.type.match("image.*")) {
+        alert("Please select a JPG, JPEG or PNG image.");
+        this.value = "";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Image size must be below 5MB.");
+        this.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        fileName.textContent = file.name;
+        preview.classList.add("show");
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+
+{% endblock %}

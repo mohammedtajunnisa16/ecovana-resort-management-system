@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Stays | Ecovana{% endblock %}
+
+{% block content %}
+
+<header class="navbar">
+    <a href="/" class="logo">
+        <span class="logo-icon">E</span>
+        <span><b>ECOVANA</b><small>NATURE RESORTS</small></span>
+    </a>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/stays/" class="active">Stays</a>
+        <a href="/experiences/">Experiences</a>
+        <a href="/about/">About</a>
+    </nav>
+    <a href="/booking/" class="book-btn">Check Availability</a>
+</header>
+
+<section class="stays-hero">
+    <div>
+        <span>ECOVANA STAYS</span>
+        <h1>Rooms with a<br><i>view to remember.</i></h1>
+        <p>Elegant interiors, private spaces and nature just outside your door.</p>
+    </div>
+</section>
+
+<section class="stay-intro">
+    <div>
+        <span>OUR PROPERTIES</span>
+        <h2>Find your<br><i>perfect stay.</i></h2>
+    </div>
+    <p>Choose from private houses, spacious villas and peaceful cabins, each designed for a comfortable escape.</p>
+</section>
+
+<section class="property-list">
+
+    {% for property in properties %}
+
+    <article class="property-card {% if forloop.counter|divisibleby:2 %}property-reverse{% endif %}">
+
+        {% if property.image %}
+        <div class="property-image" style="background-image:url('{{ property.image.url }}');"></div>
+        {% else %}
+        <div class="property-image"></div>
+        {% endif %}
+
+        <div class="property-details">
+            <span>{{ forloop.counter|stringformat:"02d" }} · {{ property.location|upper }}</span>
+
+            <h3>{{ property.name }}</h3>
+
+            <p>{{ property.description }}</p>
+
+            <div class="property-info">
+                <span>{{ property.capacity }} Guests</span>
+                <span>{{ property.bedrooms }} Bedrooms</span>
+                <span>{{ property.bathrooms }} Bathrooms</span>
+            </div>
+
+            <div class="property-bottom">
+                <div>
+                    <small>FROM</small>
+                    <strong>₹{{ property.price }} <em>/ night</em></strong>
+                </div>
+
+                <a href="{% url 'booking' %}">Book this stay →</a>
+            </div>
+        </div>
+
+    </article>
+
+    {% empty %}
+
+    <div class="no-properties">
+        <h3>No stays available</h3>
+        <p>Our properties are currently being updated. Please check again soon.</p>
+    </div>
+
+    {% endfor %}
+
+</section>
+
+<section class="nature-stay">
+    <div class="nature-stay-content">
+        <span>OUTSIDE YOUR ROOM</span>
+        <h2>Nature is<br><i>never far away.</i></h2>
+        <p>Step outside and discover quiet trails, fresh air, water views and spaces made for slowing down.</p>
+        <a href="/experiences/">Explore experiences →</a>
+    </div>
+</section>
+
+<section class="stay-book">
+    <span>FIND YOUR DATES</span>
+    <h2>Your room is<br><i>waiting.</i></h2>
+    <a href="/booking/">Check availability →</a>
+</section>
+
+<footer>
+    <div>
+        <b>ECOVANA</b>
+    </div>
+    <div>
+        <p>Nature resorts, beautifully lived.</p>
+    </div>
+</footer>
+
+{% endblock %}

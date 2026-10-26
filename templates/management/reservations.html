@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reservations | Ecovana Management{% endblock %}
+
+{% block content %}
+
+<div class="management-page">
+
+    <aside class="management-sidebar">
+        <div class="management-logo">
+            <span>E</span>
+            <div>
+                <strong>ECOVANA</strong>
+                <small>MANAGEMENT</small>
+            </div>
+        </div>
+
+        <nav class="management-nav">
+            <a href="{% url 'management_dashboard' %}">Dashboard</a>
+            <a href="{% url 'management_properties' %}">Properties</a>
+            <a href="{% url 'management_reservations' %}" class="active">Reservations</a>
+            <a href="{% url 'management_guests' %}">Guests</a>
+            <a href="{% url 'management_experiences' %}">Experiences</a>
+        </nav>
+
+        <a href="{% url 'home' %}" class="view-site">← View Ecovana website</a>
+    </aside>
+
+    <main class="management-main">
+
+        <section class="reservations-header">
+            <div>
+                <span>ECOVANA MANAGEMENT</span>
+                <h1>Guest <i>reservations.</i></h1>
+                <p>Review and manage every booking request from one place.</p>
+            </div>
+        </section>
+
+        <section class="reservation-stats">
+
+            <div class="reservation-stat-card">
+                <span>TOTAL RESERVATIONS</span>
+                <strong>{{ total_reservations }}</strong>
+                <p>All booking requests</p>
+            </div>
+
+            <div class="reservation-stat-card pending-card">
+                <span>PENDING</span>
+                <strong>{{ pending_reservations }}</strong>
+                <p>Waiting for review</p>
+            </div>
+
+            <div class="reservation-stat-card confirmed-card">
+                <span>CONFIRMED</span>
+                <strong>{{ confirmed_reservations }}</strong>
+                <p>Approved stays</p>
+            </div>
+
+            <div class="reservation-stat-card rejected-card">
+                <span>REJECTED</span>
+                <strong>{{ rejected_reservations }}</strong>
+                <p>Declined requests</p>
+            </div>
+
+        </section>
+
+        <section class="reservations-table-card">
+
+            <div class="reservations-table-header">
+                <div>
+                    <span>BOOKING ACTIVITY</span>
+                    <h2>Recent reservations</h2>
+                </div>
+
+                <div class="reservation-filters">
+    <a href="?status=all" class="{% if selected_status == 'all' %}active{% endif %}">All</a>
+    <a href="?status=Pending" class="{% if selected_status == 'Pending' %}active{% endif %}">Pending</a>
+    <a href="?status=Confirmed" class="{% if selected_status == 'Confirmed' %}active{% endif %}">Confirmed</a>
+    <a href="?status=Rejected" class="{% if selected_status == 'Rejected' %}active{% endif %}">Rejected</a>
+</div>
+            </div>
+
+            <div class="reservation-table-scroll">
+
+                <table class="reservation-table">
+
+                    <thead>
+                        <tr>
+                            <th>GUEST</th>
+                            <th>PROPERTY</th>
+                            <th>CHECK-IN</th>
+                            <th>CHECK-OUT</th>
+                            <th>GUESTS</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for booking in bookings %}
+
+                        <tr>
+
+                            <td>
+                                <div class="reservation-guest">
+
+                                    <div class="reservation-avatar">
+                                        {{ booking.guest.name|first|upper }}
+                                    </div>
+
+                                    <div>
+                                        <strong>{{ booking.guest.name }}</strong>
+                                        <small>{{ booking.guest.email }}</small>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="reservation-property">
+                                    <strong>{{ booking.property.name }}</strong>
+                                    <small>{{ booking.property.location }}</small>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="reservation-date">
+                                    {{ booking.check_in|date:"d M Y" }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="reservation-date">
+                                    {{ booking.check_out|date:"d M Y" }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="guest-number">
+                                    {{ booking.guests }}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                {% if booking.status == 'Pending' %}
+                                    <span class="reservation-status pending">
+                                        <span></span>
+                                        Pending
+                                    </span>
+
+                                {% elif booking.status == 'Confirmed' %}
+                                    <span class="reservation-status confirmed">
+                                        <span></span>
+                                        Confirmed
+                                    </span>
+
+                                {% else %}
+                                    <span class="reservation-status rejected">
+                                        <span></span>
+                                        Rejected
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                <a href="{% url 'reservation_detail' booking.id %}" class="reservation-view">
+                                    View →
+                                </a>
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="7">
+
+                                <div class="reservations-empty">
+                                    <div class="empty-icon">+</div>
+                                    <h3>No reservations yet</h3>
+                                    <p>Guest bookings will appear here when someone makes a reservation.</p>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

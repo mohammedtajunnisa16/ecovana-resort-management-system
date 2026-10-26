@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Experiences | Ecovana Management{% endblock %}
+{% block content %}
+<div class="management-page">
+<aside class="management-sidebar">
+<div class="management-logo">
+<span>E</span>
+<div>
+<strong>ECOVANA</strong>
+<small>MANAGEMENT</small>
+</div>
+</div>
+<nav class="management-nav">
+<a href="{% url 'management_dashboard' %}">Dashboard</a>
+<a href="{% url 'management_properties' %}">Properties</a>
+<a href="{% url 'management_reservations' %}">Reservations</a>
+<a href="{% url 'management_guests' %}">Guests</a>
+<a href="{% url 'management_experiences' %}" class="active">Experiences</a>
+</nav>
+<a href="{% url 'home' %}" class="view-site">View Public Site →</a>
+</aside>
+<main class="management-main">
+<section class="mgmt-exp-header">
+<div>
+<span>THE ECOVANA COLLECTION</span>
+<h1>Experiences <i>worth remembering.</i></h1>
+<p>Manage the experiences that make every Ecovana stay special.</p>
+</div>
+<div class="mgmt-exp-total">
+<strong>{{total_experiences}}</strong>
+<span>Experiences</span>
+</div>
+</section>
+<section class="mgmt-exp-collection">
+<div class="mgmt-exp-heading">
+<div>
+<span>RESORT EXPERIENCES</span>
+<h2>Your experiences</h2>
+</div>
+</div>
+<div class="mgmt-exp-grid">
+{% for experience in experiences %}
+<article class="mgmt-exp-card">
+<div class="mgmt-exp-image">
+{% if experience.image %}
+<img src="{{ experience.image.url }}" alt="{{ experience.name }}">
+{% else %}
+{% if forloop.counter == 1 %}
+<img src="{% static 'images/poolside.jpg' %}" alt="{{ experience.name }}">
+{% elif forloop.counter == 2 %}
+<img src="{% static 'images/dining.jpg' %}" alt="{{ experience.name }}">
+{% elif forloop.counter == 3 %}
+<img src="{% static 'images/wellness.jpg' %}" alt="{{ experience.name }}">
+{% elif forloop.counter == 4 %}
+<img src="{% static 'images/nature-trails.jpg' %}" alt="{{ experience.name }}">
+{% elif forloop.counter == 5 %}
+<img src="{% static 'images/fitness.jpg' %}" alt="{{ experience.name }}">
+{% endif %}
+{% endif %}
+<span class="mgmt-exp-tag">
+{% if forloop.counter == 1 %}LEISURE
+{% elif forloop.counter == 2 %}CULINARY
+{% elif forloop.counter == 3 %}WELLNESS
+{% elif forloop.counter == 4 %}NATURE
+{% elif forloop.counter == 5 %}ACTIVE
+{% endif %}
+</span>
+</div>
+<div class="mgmt-exp-content">
+<span class="mgmt-exp-number">{{ forloop.counter|stringformat:"02d" }}</span>
+<h3>{{ experience.name }}</h3>
+<p>{{ experience.description }}</p>
+<div class="mgmt-exp-info">
+<span>EXPERIENCE</span>
+<span>•</span>
+{% if experience.is_available %}
+<span>AVAILABLE</span>
+{% else %}
+<span>UNAVAILABLE</span>
+{% endif %}
+</div>
+<div class="mgmt-exp-bottom">
+<div class="mgmt-exp-price">
+<small>FROM</small>
+{% if experience.price %}
+<strong>₹{{ experience.price|floatformat:0 }}</strong>
+{% else %}
+<strong>—</strong>
+{% endif %}
+</div>
+<a href="{% url 'edit_experience' experience.name|slugify %}" class="mgmt-exp-manage">Manage <span>→</span></a>
+</div>
+</div>
+</article>
+{% empty %}
+<div class="mgmt-exp-empty">
+<h3>No experiences found</h3>
+<p>Your Ecovana experiences will appear here.</p>
+</div>
+{% endfor %}
+</div>
+</section>
+</main>
+</div>
+{% endblock %}
